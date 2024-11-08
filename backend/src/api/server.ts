@@ -4,6 +4,7 @@ import GetPaper from './routes/get_paper';
 import PostPaper from './routes/post_paper';
 import { GeminiAPI } from '../lib/gemini';
 import { PineconeAPI } from '../lib/pinecone';
+import SearchPaper from './routes/search_paper';
 
 export class ApiServer {
     private app: express.Express;
@@ -19,6 +20,7 @@ export class ApiServer {
         
         this.register(new GetPaper());
         this.register(new PostPaper(this.gemini, this.pinecone));
+        this.register(new SearchPaper(this.gemini, this.pinecone));
     }
 
     private register(route: ApiRoute): void {

@@ -4,7 +4,7 @@ export function removeUnderscoreFieldsDeep(obj: any): any {
     if (Array.isArray(obj)) {
         return obj.map((item) => removeUnderscoreFieldsDeep(item));
     } else if (typeof obj === 'object') {
-        if (obj  ) {
+        if (obj instanceof Date) {
             return obj;
         }
         const newObj: any = {};
