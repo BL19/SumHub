@@ -10,7 +10,7 @@ import { PineconeAPI } from "../../lib/pinecone";
  * Route: POST /api/v1/paper/search
  * 
  * Response:
- * - 200: Paper added successfully
+ * - 200: Returns the papers
  * - 400: Invalid request
  * - 500: Internal server error
  * @implements ApiRoute
