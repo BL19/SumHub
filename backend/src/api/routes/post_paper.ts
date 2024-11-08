@@ -1,6 +1,8 @@
 import { Express } from "express";
 import { ApiRoute } from "../apiRoute";
 import { Paper } from "../../db/schemas/paper";
+import { GeminiAPI } from "../../lib/gemini";
+import { PineconeAPI } from "../../lib/pinecone";
 
 /**
  * Route for adding a paper to the database
@@ -15,8 +17,16 @@ import { Paper } from "../../db/schemas/paper";
  */
 export default class PostPaper implements ApiRoute {
     
+    gemini: GeminiAPI;
+    pinecone: PineconeAPI;
+
+    constructor(gemini: GeminiAPI, pinecone: PineconeAPI) {
+        this.gemini = gemini;
+        this.pinecone = pinecone;
+    }
+
     register(app: Express): void {
-        app.post("/api/v1/paper", (req, res) => {
+        app.post("/api/v1/paper", async (req, res) => {
             
             // Validation
             const paper = new Paper(req.body);
@@ -27,7 +37,16 @@ export default class PostPaper implements ApiRoute {
             }
             
             // Body is valid, save the paper
-            paper.save().then((doc) => {
+            await paper.save().then(async (doc) => {
+                // Create the embedding for the paper
+                const embedding = await this.gemini.generateEmbedding(this.createEmbeddingText(paper));
+
+                // Save the embedding
+                await this.pinecone.paperIndex.upsert([{
+                    id: doc._id.toString(),
+                    values: embedding.values
+                }])
+
                 res.json({ message: "Paper added successfully", id: doc._id });
             }).catch((err) => {
                 console.error(err);
@@ -35,6 +54,16 @@ export default class PostPaper implements ApiRoute {
             });
 
         });
+    }
+
+    createEmbeddingText(paper: Paper): string {
+        return `Title: ${paper.title} 
+        Abstract: 
+        ${paper.abstract}
+
+        Subjects: ${paper.subjects.join(', ')}
+        
+        Authors: ${paper.authors.join(', ')}`;
     }
 
 }
