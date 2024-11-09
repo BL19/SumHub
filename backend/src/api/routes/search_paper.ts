@@ -3,6 +3,7 @@ import { ApiRoute } from "../apiRoute";
 import { Paper, paperToJson } from "../../db/schemas/paper";
 import { GeminiAPI } from "../../lib/gemini";
 import { PineconeAPI } from "../../lib/pinecone";
+import { RecordMetadata, ScoredPineconeRecord } from "@pinecone-database/pinecone";
 
 /**
  * Route for searching for papers
@@ -28,31 +29,69 @@ export default class SearchPaper implements ApiRoute {
     register(app: Express): void {
         app.post("/api/v1/paper/search", async (req, res) => {
             const term = req.body.term;
-            const topK = req.body.topK || 10;
+            const topK = (req.body.topK || 10) * 10;
             if (!term) {
                 res.status(400).json({ error: "Invalid request" });
                 return;
             }
-            if (topK < 1 || topK > 100) {
+            if (topK < 10 || topK > 1000) {
                 res.status(400).json({ error: "Invalid request, topK must be between 1 and 100" });
                 return;
             }
 
+            // Search
             const embedding = await this.gemini.generateEmbedding(term);
             const results = await this.pinecone.paperIndex.query({
                 topK: topK,
                 vector: embedding.values
             })
-            
-            const paperIds = results.matches.map((match) => this.findId(match.id));
-            console.log(paperIds);
-            const papers = await Paper.find({ _id: { $in: paperIds } });
 
+            
+            
+            // Group by paper ID
+            let groups: { [key: string]: ScoredPineconeRecord<RecordMetadata>[] } = {};
+            let bestScore: { [key: string]: number } = {};
+
+            results.matches.forEach((match) => {
+                let id = this.findId(match.id);
+                if (!groups[id]) {
+                    groups[id] = [];
+                }
+                groups[id].push(match);
+
+                if (match.score && (!bestScore[id] || match.score > bestScore[id])) {
+                    bestScore[id] = match.score;
+                }
+            });
+
+            let paperIds = Object.keys(groups);
+            // Remove duplicates
+            paperIds = [...new Set(paperIds)];
+
+            // order by best score
+            paperIds.sort((a, b) => {
+                if (bestScore[a] && bestScore[b]) {
+                    return bestScore[b] - bestScore[a];
+                } else if (bestScore[a]) {
+                    return -1;
+                } else if (bestScore[b]) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
+
+            // Keep only topK
+            paperIds = paperIds.slice(0, topK / 10);
+
+
+
+            // Fetch from database
+            const papers = await Paper.find({ _id: { $in: paperIds } });
             const response = papers.map((paper) => {
-                const score = results.matches.find((match) => match.id === paper._id.toString())?.score;
                 return {
                     data: paperToJson(paper),
-                    score: score
+                    score: bestScore[paper._id.toString()]
                 }
             });
 
