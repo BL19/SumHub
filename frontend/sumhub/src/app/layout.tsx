@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import "../app/ui/global.css"
+import "@/app/globals.css";
+import global from "@/app/ui/global.module.css";
 import { inter } from '@/app/ui/fonts';
 
 
@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-    <body className={`${inter.className} antialiased`}>{children}</body>
+    <body className={`${inter.className} antialiased ${global.body}`}>{children}</body>
   </html>
   );
 }
