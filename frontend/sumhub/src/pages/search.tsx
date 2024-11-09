@@ -158,7 +158,7 @@ function Result({ result }: { result: SearchResult }) {
   const primarySuject = result.data.subjects[0];
   const [expanded, setExpanded] = useState(false);
   return (
-    <div className="bg-white shadow-md rounded-md p-4 hover:shadow-lg">
+    <div key={result.data.id} className="bg-white shadow-md rounded-md p-4 hover:shadow-lg">
       <h2 className="text-xl font-bold">{result.data.title}</h2>
       <div className="mt-2">
         {result.data.authors.map((author) => (
