@@ -35,6 +35,6 @@ jobs:
         with:
           context: backend
           file: backend/Dockerfile
-          tags: bl19dev/sumhub:main
+          tags: bl19dev/sumhub-backend:main
           push: true
           platforms: linux/amd64
