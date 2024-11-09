@@ -44,7 +44,8 @@ export default class SearchPaper implements ApiRoute {
                 vector: embedding.values
             })
             
-            const paperIds = results.matches.map((match) => match.id);
+            const paperIds = results.matches.map((match) => this.findId(match.id));
+            console.log(paperIds);
             const papers = await Paper.find({ _id: { $in: paperIds } });
 
             const response = papers.map((paper) => {
@@ -55,8 +56,26 @@ export default class SearchPaper implements ApiRoute {
                 }
             });
 
+            // Sort by score
+            response.sort((a, b) => {
+                if (a.score && b.score) {
+                    return b.score - a.score;
+                } else if (a.score) {
+                    return -1;
+                } else if (b.score) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            });
+
             res.json(response);
         });
+    }
+
+    findId(pineconeId: string): string {
+        let lastIndex = pineconeId.lastIndexOf("-");
+        return pineconeId.substring(0, lastIndex);
     }
 
 }

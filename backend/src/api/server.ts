@@ -5,11 +5,13 @@ import PostPaper from './routes/post_paper';
 import { GeminiAPI } from '../lib/gemini';
 import { PineconeAPI } from '../lib/pinecone';
 import SearchPaper from './routes/search_paper';
+import { Embedder } from '../lib/embedder';
 
 export class ApiServer {
     private app: express.Express;
     private gemini: GeminiAPI;
     private pinecone: PineconeAPI;
+    private embedder: Embedder;
 
     constructor() {
         this.app = express();
@@ -17,9 +19,10 @@ export class ApiServer {
 
         this.gemini = new GeminiAPI();
         this.pinecone = new PineconeAPI();
+        this.embedder = new Embedder(this.gemini, this.pinecone);
         
         this.register(new GetPaper());
-        this.register(new PostPaper(this.gemini, this.pinecone));
+        this.register(new PostPaper(this.embedder));
         this.register(new SearchPaper(this.gemini, this.pinecone));
     }
 

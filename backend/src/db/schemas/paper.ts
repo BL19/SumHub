@@ -15,6 +15,10 @@ const PaperSchema = new mongoose.Schema({
   }], required: true },
 });
 
+PaperSchema.add({
+  embeddingCount: { type: Number, required: false },
+})
+
 export type Paper = mongoose.InferSchemaType<typeof PaperSchema>;
 export const Paper = mongoose.model<Paper>('Paper', PaperSchema);
 export function paperToJson(paper: mongoose.Document<unknown, {}, Paper>): any {
