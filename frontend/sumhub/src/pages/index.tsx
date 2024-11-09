@@ -9,18 +9,18 @@ import { Input } from "@/components/ui/input";
 export default function Home() {
   const router = useRouter();
 
-  // const handleLogin = () => {
-  //   // Navigate to the login page
-  //   router.push("/login"); // Replace '/login' with your desired path
-  // };
+   const handleLogin = () => {
 
-  // const handleSignUp = () => {
-  //   // Navigate to the sign-up page
-  //   router.push("/signup"); // Replace '/signup' with your desired path
-  // };
+    router.push("/login"); 
+  };
+/*
+  const handleSignUp = () => {
 
+  router.push("/signup");
+   };
+*/
   return (
-    <DefaultLayout>
+    <DefaultLayout onClickfun={handleLogin}>
       <div className="flex-grow flex flex-col items-center justify-center px-4">
         <div className="w-full max-w-md p-9 space-y-4 text-center">
           <LandingText />
