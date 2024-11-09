@@ -34,6 +34,11 @@ export default class PostPaper implements ApiRoute {
                 res.status(400).json({ errors: error.errors });
                 return;
             }
+
+            if (await Paper.exists({ url: paper.url })) {
+                res.status(409).json({ error: "A paper with that URL already exists" });
+                return;
+            }
             
             // Body is valid, save the paper
             await paper.save().then(async (doc) => {
