@@ -1,3 +1,11 @@
 .searchResultContainer {
     max-width: 800px;
 }
+
+.minWidthBox{
+    min-width: 804px;
+}
+
+.minHeightBox{
+    min-height: 200px;
+}

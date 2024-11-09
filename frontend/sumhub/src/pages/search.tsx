@@ -8,6 +8,7 @@ import fetchJson from "../lib/fetchJson";
 import "@/app/globals.css";
 import styles from "@/app/ui/search.module.css";
 import { useEffect, useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton"
 
 export async function getServerSideProps(context: any) {
   const { q } = context.query;
@@ -109,13 +110,15 @@ function LoadingContent() {
 
 function SkeletonResult() {
     return (
-        <div className="bg-white shadow-md rounded-md p-4 hover:shadow-lg">
+        <div className={`bg-white shadow-md rounded-md p-4 hover:shadow-lg ${styles.minWidthBox} ${styles.minHeightBox}`}>
             <div className="animate-pulse flex space-x-4">
-                <div className="flex-1 space-y-4 py-1">
-                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                <div className="flex-1 space-y-4 py-1 min-w-md">
+                    <div className="h-4 bg-gray-200 rounded w-3/4 min-h-8 "></div>
                     <div className="space-y-2">
-                        <div className="h-4 bg-gray-200 rounded"></div>
-                        <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                    <div className="h-4 bg-gray-200 rounded min-h-16 ">
+                        </div>
+                        <div className="h-4 bg-gray-200 rounded w-5/6 min-h-10 ">
+                        </div> 
                     </div>
                 </div>
             </div>
