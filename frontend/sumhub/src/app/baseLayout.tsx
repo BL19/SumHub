@@ -15,14 +15,14 @@ export default function DefaultLayout({
         <a onClick={() => router.push("/")} className="cursor-pointer">
           <LogoHolder />
         </a>
-        <div>
+        {/* <div>
           <Button variant="ghost" onClick={() => router.push("/login")}>
             Login
           </Button>
           <Button className="ml-2" onClick={() => router.push("/signup")}>
             Sign Up
           </Button>{" "}
-        </div>
+        </div> */}
       </div>
       {children}
     </div>
