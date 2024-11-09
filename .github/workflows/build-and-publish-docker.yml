@@ -34,7 +34,7 @@ jobs:
         uses: docker/build-push-action@v3.2.0
         with:
           context: backend
-          file: Dockerfile
+          file: backend/Dockerfile
           tags: bl19dev/sumhub:main
           push: true
           platforms: linux/amd64
