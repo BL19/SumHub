@@ -30,11 +30,19 @@ jobs:
         with:
             username: ${{ secrets.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push Docker images
+      - name: Build and push backend image
         uses: docker/build-push-action@v3.2.0
         with:
           context: backend
           file: backend/Dockerfile
           tags: bl19dev/sumhub-backend:main
+          push: true
+          platforms: linux/amd64
+      - name: Build and push backend image
+        uses: docker/build-push-action@v3.2.0
+        with:
+          context: frontend/sumhub
+          file: frontend/sumhub/Dockerfile
+          tags: bl19dev/sumhub-frontend:main
           push: true
           platforms: linux/amd64

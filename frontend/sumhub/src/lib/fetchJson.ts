@@ -1,5 +1,5 @@
 export class FetchError extends Error {
-  response: Response;
+  response: Response | null;
   data: {
     message: string;
   };
@@ -9,7 +9,7 @@ export class FetchError extends Error {
     data,
   }: {
     message: string;
-    response: Response;
+    response: Response | null;
     data: {
       message: string;
     } | undefined | null;
@@ -33,9 +33,10 @@ export default async function fetchJson<JSON = unknown>(
   init?: RequestInit
 ): Promise<JSON> {
   console.log(input, init)
-  const response = await fetch(input, init);
-
+  let response = null;
   try {
+    response = await fetch(input, init);
+
     console.log(response);
     // if the server replies, there's always some data in json
     // if there's a network error, it will throw at the previous line
@@ -53,6 +54,7 @@ export default async function fetchJson<JSON = unknown>(
       data,
     });
   } catch (error: any) {
+    console.error("fetchJson error", error);
     if (error instanceof FetchError) {
       throw error;
     }
