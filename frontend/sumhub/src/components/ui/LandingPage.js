@@ -1,6 +1,3 @@
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-
 
 export function LandingText(){
     return (<div ><p className="font-black text-5xl mt-5 mb-5">
@@ -11,15 +8,7 @@ export function LandingText(){
             </p>
             </div>);
 }
-export function SearchInput(props){
-    return (
-        <div className="flex w-full max-w-sm items-center space-x-2 ">
-        <Input type="text" placeholder="E.g. Computer Science" />
-        <Button onClick={props.onClick} type="submit">Search</Button>
-      </div>
-  
-    );
-}
+
 
 export function LogoHolder(){
     return ( 

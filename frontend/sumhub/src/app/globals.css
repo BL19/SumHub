@@ -8,7 +8,7 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 0 0% 96%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
@@ -71,42 +71,41 @@ body {
   }
 }
 
-  .loader {
-    width: 70px;
-    height: 35px;
-    position: relative;
-    overflow: hidden;
+.loader {
+  width: 70px;
+  height: 35px;
+  position: relative;
+  overflow: hidden;
+}
+.loader:before {
+  content: "";
+  width: 70px;
+  height: 70px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  border: 5px solid #0000;
+  border-color: #fff #fff #0000 #0000;
+  border-radius: 50%;
+  box-sizing: border-box;
+  animation: rotate 3s ease-in-out infinite;
+  transform: rotate(-200deg);
+}
+@keyframes rotate {
+  0% {
+    border-width: 10px;
   }
-  .loader:before {
-    content: "";
-    width: 70px;
-    height: 70px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    border: 5px solid #0000;
-    border-color: #fff #fff #0000 #0000;
-    border-radius: 50%;
-    box-sizing: border-box;
-    animation: rotate 3s ease-in-out infinite;
-    transform: rotate(-200deg);
+  25% {
+    border-width: 3px;
   }
-  @keyframes rotate {
-    0% {
-      border-width: 10px;
-    }
-    25% {
-      border-width: 3px;
-    }
-    50% {
-      transform: rotate(115deg);
-      border-width: 10px;
-    }
-    75% {
-      border-width: 3px;
-    }
-    100% {
-      border-width: 10px;
-    }
+  50% {
+    transform: rotate(115deg);
+    border-width: 10px;
   }
-      
+  75% {
+    border-width: 3px;
+  }
+  100% {
+    border-width: 10px;
+  }
+}
