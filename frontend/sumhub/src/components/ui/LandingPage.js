@@ -4,18 +4,18 @@ import { Button } from "@/components/ui/button"
 
 export function LandingText(){
     return (<div ><p className="font-black text-5xl mt-5 mb-5">
-        Speed Up Your Research Game
+        <span className="italic">Speed Up</span> Your Research Game
             </p>
             <p className="text-xl mt-5 mb-5 font-semibold">Find research papers fast.Our AI searches and summarizes studies in seconds,
                 streamlining your research.
             </p>
             </div>);
 }
-export function SearchInput(){
+export function SearchInput(props){
     return (
         <div className="flex w-full max-w-sm items-center space-x-2 ">
         <Input type="text" placeholder="E.g. Computer Science" />
-        <Button type="submit">Search</Button>
+        <Button onClick={props.onClick} type="submit">Search</Button>
       </div>
   
     );
