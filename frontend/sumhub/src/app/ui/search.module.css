@@ -9,3 +9,37 @@
 .minHeightBox{
     min-height: 200px;
 }
+
+.expand-icon {
+    height: 32px;
+    width: 32px;
+    position: relative;
+  }
+  .expand-icon::before, .expand-icon::after {
+    content: " ";
+    width: 32px;
+    height: 6px;
+    background-color: #000;
+    display: block;
+  position: absolute;
+    top: 50%;
+    left: 50%;
+    transition: all 0.15s cubic-bezier(.42, 0, .58, 1);
+    opacity: 1;
+    border-radius: 2px;
+  }
+  .expand-icon::before {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+  .expand-icon::after {
+    transform: translate(-50%, -50%);
+  }
+  
+  
+  .expand-icon.expanded::before {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  .expand-icon.expanded::after {
+    transform: translate(-50%, -50%) rotate(0deg);
+    opacity: 0;
+  }

@@ -8,7 +8,7 @@ import fetchJson from "../lib/fetchJson";
 import "@/app/globals.css";
 import styles from "@/app/ui/search.module.css";
 import { useEffect, useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton"
+
 
 export async function getServerSideProps(context: any) {
   const { q } = context.query;
@@ -166,28 +166,32 @@ function Result({ result }: { result: SearchResult }) {
     <div key={result.data.id} className="bg-white shadow-md rounded-md p-4 hover:shadow-lg">
       <h2 className="text-xl font-bold">{result.data.title}</h2>
       <div className="mt-2">
-        {result.data.authors.map((author) => (
+        <div> {result.data.authors.map((author) => (
           <span key={author} className="text-sm text-gray-600 mr-2">
             {author}
           </span>
-        ))}
+        ))}</div>
+   
+       
       </div>
-      <div className="mt-2">
-        <span key="pubDate" className="text-sm text-gray-600 mr-2">
+      <div className="mt-2 flex justify-between">
+        <div> <span key="pubDate" className="text-sm text-gray-600 mr-2">
           {new Date(result.data.publishDate).toLocaleDateString()}
         </span>
         <span key="primarySubject" className="text-sm text-gray-600 mr-2">
           {primarySuject}
-        </span>
-      </div>
-
-      {!expanded && (
-        <div className="flex flex-col mt-4">
+        </span></div>
+       <div className="pb-2 pr-2  max-w-6">{!expanded && (
+        <div className="flex flex-col mt-6">
           <Button variant="ghost" onClick={() => setExpanded(!expanded)}>
-            Show more
+          <div className={`${styles['expand-icon']} max-w-2 `}>
+          </div>
           </Button>
         </div>
-      )}
+      )}</div>
+      </div>
+
+   
 
       {expanded && (
         <>
