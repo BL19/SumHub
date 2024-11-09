@@ -6,6 +6,7 @@ import { GeminiAPI } from '../lib/gemini';
 import { PineconeAPI } from '../lib/pinecone';
 import SearchPaper from './routes/search_paper';
 import { Embedder } from '../lib/embedder';
+import * as cors from 'cors';
 
 export class ApiServer {
     private app: express.Express;
@@ -15,6 +16,12 @@ export class ApiServer {
 
     constructor() {
         this.app = express();
+        this.app.use(cors({
+            origin: process.env.CORS_ORIGIN || '*',
+            methods: ['GET', 'POST', 'DELETE', 'PUT'],
+            optionsSuccessStatus: 200
+        }));
+
         this.app.use(express.json());
 
         this.gemini = new GeminiAPI();
