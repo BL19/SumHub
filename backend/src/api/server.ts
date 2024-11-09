@@ -2,16 +2,23 @@ import express from 'express';
 import { ApiRoute } from './apiRoute';
 import GetPaper from './routes/get_paper';
 import PostPaper from './routes/post_paper';
+import { GeminiAPI } from '../lib/gemini';
+import { PineconeAPI } from '../lib/pinecone';
 
 export class ApiServer {
     private app: express.Express;
+    private gemini: GeminiAPI;
+    private pinecone: PineconeAPI;
 
     constructor() {
         this.app = express();
         this.app.use(express.json());
+
+        this.gemini = new GeminiAPI();
+        this.pinecone = new PineconeAPI();
         
         this.register(new GetPaper());
-        this.register(new PostPaper());
+        this.register(new PostPaper(this.gemini, this.pinecone));
     }
 
     private register(route: ApiRoute): void {
