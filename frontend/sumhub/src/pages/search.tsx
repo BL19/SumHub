@@ -30,7 +30,7 @@ export default function Results({ term }: { term: string }) {
       .then((results) => {
         setResults(results);
         setNotFound(results.length === 0);
-        // setLoading(false);
+        setLoading(false);
       })
       .catch((error) => {
         setError(error);
@@ -44,8 +44,10 @@ export default function Results({ term }: { term: string }) {
         onSubmit={(e) => {
           e.preventDefault();
           const formData = new FormData(e.currentTarget);
-          const term = formData.get("term");
-          router.push(`/search?q=${term}`);
+          const newTerm = formData.get("term");
+          if (term !== newTerm) {
+            router.push(`/search?q=${newTerm}`);
+          }
         }}
       >
         <div className="flex-grow flex flex-col items-center justify-center px-4">
