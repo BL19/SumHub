@@ -23,7 +23,7 @@ export function SearchInput(){
 
 export function LogoHolder(){
     return ( 
-        <svg id="Lager_1" data-name="Lager 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 355.68 65.05">
+        <svg id="Lager_1" data-name="Lager 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 355.68 65.05" width="200" height="60"  >
         <defs>
           <style>
             {`
