@@ -7,20 +7,24 @@ export default function DefaultLayout({
 }: {
   children: React.ReactNode;
 }) {
-    const router = useRouter();
+  const router = useRouter();
 
   return (
-    
     <div className="min-h-screen flex flex-col">
       <div className=" p-8 flex justify-between items-center">
-        <LogoHolder></LogoHolder>
+        <a onClick={() => router.push("/")} className="cursor-pointer">
+          <LogoHolder />
+        </a>
         <div>
-          <Button variant="ghost" onClick={() => router.push("/login")}>Login</Button>
-          <Button className="ml-2" onClick={() => router.push("/signup")}>Sign Up</Button>{" "}
+          <Button variant="ghost" onClick={() => router.push("/login")}>
+            Login
+          </Button>
+          <Button className="ml-2" onClick={() => router.push("/signup")}>
+            Sign Up
+          </Button>{" "}
         </div>
       </div>
       {children}
     </div>
-    
   );
 }
