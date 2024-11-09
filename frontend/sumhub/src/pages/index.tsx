@@ -12,7 +12,7 @@ export default function Home() {
     <DefaultLayout>
       <Meta
         title="Sumhub - A search engine for research papers"
-        description="With Sumhub you can discover and review research papers with the help of AI search features."
+        description="Speed Up your Research Game with Sumhub. Find research papers fast. Our AI searches and summarizes studies in seconds, streamlining your research."
         url="https://sumhub.bl19.cloud/"
       />
       <div className="flex-grow flex flex-col items-center justify-center px-4">

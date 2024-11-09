@@ -8,7 +8,6 @@ import fetchJson from "../lib/fetchJson";
 import "@/app/globals.css";
 import styles from "@/app/ui/search.module.css";
 import { useEffect, useState } from "react";
-import Head from "next/head";
 import Meta from "../components/Meta";
 
 export async function getServerSideProps(context: any) {
@@ -173,7 +172,6 @@ function ResultsContent({ results }: { results: SearchResult[] }) {
 
 function Result({ result }: { result: SearchResult }) {
   const primarySuject = result.data.subjects[0];
-  const subjects = result.data.subjects.slice(1);
   const [expanded, setExpanded] = useState(false);
   return (
     <div
