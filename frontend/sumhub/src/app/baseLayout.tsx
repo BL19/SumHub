@@ -12,7 +12,10 @@ export default function DefaultLayout({
   return (
     <div className="min-h-screen flex flex-col">
       <div className=" p-8 flex justify-between items-center">
-        <a onClick={() => router.push("/")} className="cursor-pointer">
+        <a onClick={(e) => {
+          e.preventDefault();
+          router.push("/");
+        }} href="/" className="cursor-pointer" aria-label="Start page">
           <LogoHolder />
         </a>
         {/* <div>

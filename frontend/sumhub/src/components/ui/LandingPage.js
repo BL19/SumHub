@@ -3,7 +3,7 @@ export function LandingText(){
     return (<div ><p className="font-black text-5xl mt-5 mb-5">
         <span className="italic">Speed Up</span> Your Research Game
             </p>
-            <p className="text-xl mt-5 mb-5 font-semibold">Find research papers fast.Our AI searches and summarizes studies in seconds,
+            <p className="text-xl mt-5 mb-5 font-semibold">Find research papers fast. Our AI searches and summarizes studies in seconds,
                 streamlining your research.
             </p>
             </div>);

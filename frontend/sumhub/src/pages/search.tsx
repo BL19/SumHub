@@ -8,6 +8,8 @@ import fetchJson from "../lib/fetchJson";
 import "@/app/globals.css";
 import styles from "@/app/ui/search.module.css";
 import { useEffect, useState } from "react";
+import Head from "next/head";
+import Meta from "../components/Meta";
 
 export async function getServerSideProps(context: any) {
   const { q } = context.query;
@@ -40,12 +42,17 @@ export default function Results({ term }: { term: string }) {
 
   return (
     <DefaultLayout>
+      <Meta
+        title={term + " | Sumhub"}
+        description={"Search results for " + term + " on Sumhub"}
+        url={"https://sumhub.bl19.cloud/search?q=" + term}
+      />
       <form
         onSubmit={(e) => {
           e.preventDefault();
           const formData = new FormData(e.currentTarget);
           const newTerm = formData.get("term");
-          if (term !== newTerm) {
+          if (newTerm && typeof newTerm === "string" && newTerm.length > 0 && term !== newTerm) {
             router.push(`/search?q=${newTerm}`);
           }
         }}
@@ -58,6 +65,8 @@ export default function Results({ term }: { term: string }) {
                 placeholder="E.g. Computer Science"
                 name="term"
                 defaultValue={term}
+                aria-label="Search Input"
+                maxLength={100}
               />
               <Button type="submit">Search</Button>
             </div>
@@ -170,13 +179,21 @@ function Result({ result }: { result: SearchResult }) {
     <div
       key={result.data.id}
       className="bg-white shadow-md rounded-md p-4 hover:shadow-lg"
+      aria-label="Result"
+      aria-description="Paper details"
     >
-      <h2 className="text-xl font-bold">{result.data.title}</h2>
-      <div className="mt-2">
+      <h2 className="text-xl font-bold" aria-label="Title" title="Title">
+        {result.data.title}
+      </h2>
+      <div className="mt-2" aria-label="Authors" title="Authors">
         <div>
           {" "}
           {result.data.authors.map((author) => (
-            <span key={author} className="text-sm text-gray-600 mr-2">
+            <span
+              key={author}
+              className="text-sm text-gray-600 mr-2"
+              aria-label="Author"
+            >
               {author}
             </span>
           ))}
@@ -185,29 +202,62 @@ function Result({ result }: { result: SearchResult }) {
       <div className="mt-2 flex justify-between">
         <div>
           {" "}
-          <span key="pubDate" className="text-sm text-gray-600 mr-2">
+          <span
+            key="pubDate"
+            className="text-sm text-gray-600 mr-2"
+            aria-label="Publish Date"
+            title="Publish Date"
+          >
             {new Date(result.data.publishDate).toLocaleDateString()}
           </span>
-          <span key="primarySubject" className="text-sm text-gray-600 mr-2">
+          <span
+            key="primarySubject"
+            className="text-sm text-gray-600 mr-2"
+            aria-label="Primary subject"
+            title="Primary subject"
+          >
             {primarySuject}
           </span>
         </div>
         <div className="pb-2 pr-2  max-w-6">
-            <div className="flex flex-col mt-6 -ml-2 cursor-pointer">
-              <Button variant="ghost" onClick={() => setExpanded(!expanded)}>
-                <div className={`${styles["expand-icon"]} max-w-2 ${expanded ? styles['expanded'] : ''}`}></div>
-              </Button>
-            </div>
+          <div className="flex flex-col mt-6 -ml-2 cursor-pointer">
+            <Button
+              variant="ghost"
+              onClick={() => setExpanded(!expanded)}
+              aria-label="Show More Button"
+              title="Show More"
+            >
+              <div
+                className={`${styles["expand-icon"]} max-w-2 ${
+                  expanded ? styles["expanded"] : ""
+                }`}
+              ></div>
+            </Button>
+          </div>
         </div>
       </div>
 
       {expanded && (
         <>
-          <p className="text-gray-800 mt-2">{result.data.abstract}</p>
+          <p
+            className="text-gray-800 mt-2"
+            aria-label="Abstract"
+            title="Abstract"
+          >
+            {result.data.abstract}
+          </p>
 
-          <div className="flex flex-wrap mt-4">
+          <div
+            className="flex flex-wrap mt-4"
+            aria-label="All Subjects"
+            title="All Subjects"
+          >
             {result.data.subjects.map((subject) => (
-              <span key={subject} className="text-sm text-gray-500 mr-2">
+              <span
+                key={subject}
+                className="text-sm text-gray-500 mr-2"
+                aria-label="Subject"
+              >
                 {subject}
               </span>
             ))}
@@ -218,6 +268,7 @@ function Result({ result }: { result: SearchResult }) {
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-500"
+              aria-label="Read More Button"
             >
               Read More
             </a>
