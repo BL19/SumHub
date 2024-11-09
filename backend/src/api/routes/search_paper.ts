@@ -29,11 +29,12 @@ export default class SearchPaper implements ApiRoute {
     register(app: Express): void {
         app.post("/api/v1/paper/search", async (req, res) => {
             const term = req.body.term;
-            const topK = (req.body.topK || 10) * 10;
-            if (!term) {
+            if (!term || typeof term !== "string" || term.length === 0 || term.length > 100) {
                 res.status(400).json({ error: "Invalid request" });
                 return;
             }
+
+            const topK = (req.body.topK || 10) * 10;
             if (topK < 10 || topK > 1000) {
                 res.status(400).json({ error: "Invalid request, topK must be between 1 and 100" });
                 return;
