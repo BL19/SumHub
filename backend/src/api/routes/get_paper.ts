@@ -1,6 +1,6 @@
 import { Express } from "express";
 import { ApiRoute } from "../apiRoute";
-import { Paper } from "../../db/schemas/paper";
+import { Paper, paperToJson } from "../../db/schemas/paper";
 import { ObjectId } from "mongodb";
 
 /**
@@ -27,7 +27,7 @@ export default class GetPaper implements ApiRoute {
             const paperId = new ObjectId(id);
             Paper.findById(paperId).then((paper) => {
                 if (paper) {
-                    res.json(paper.toJSON());
+                    res.json(paperToJson(paper));
                 } else {
                     res.status(404).json({ error: "Paper not found" });
                 }

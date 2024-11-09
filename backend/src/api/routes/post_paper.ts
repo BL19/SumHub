@@ -3,6 +3,7 @@ import { ApiRoute } from "../apiRoute";
 import { Paper } from "../../db/schemas/paper";
 import { GeminiAPI } from "../../lib/gemini";
 import { PineconeAPI } from "../../lib/pinecone";
+import { Embedder } from "../../lib/embedder";
 
 /**
  * Route for adding a paper to the database
@@ -17,12 +18,10 @@ import { PineconeAPI } from "../../lib/pinecone";
  */
 export default class PostPaper implements ApiRoute {
     
-    gemini: GeminiAPI;
-    pinecone: PineconeAPI;
+    embedder: Embedder;
 
-    constructor(gemini: GeminiAPI, pinecone: PineconeAPI) {
-        this.gemini = gemini;
-        this.pinecone = pinecone;
+    constructor(embedder: Embedder) {
+        this.embedder = embedder;
     }
 
     register(app: Express): void {
@@ -35,17 +34,24 @@ export default class PostPaper implements ApiRoute {
                 res.status(400).json({ errors: error.errors });
                 return;
             }
+
+            if (await Paper.exists({ url: paper.url })) {
+                res.status(409).json({ error: "A paper with that URL already exists" });
+                return;
+            }
             
             // Body is valid, save the paper
             await paper.save().then(async (doc) => {
-                // Create the embedding for the paper
-                const embedding = await this.gemini.generateEmbedding(this.createEmbeddingText(paper));
+                try {
+                    await this.embedder.saveEmbeddingsForPaper(doc);
+                } catch (err) {
+                    console.error(err);
+                    res.status(500).json({ error: "Internal server error" });
+                    doc.deleteOne();
+                    return;
+                }
 
-                // Save the embedding
-                await this.pinecone.paperIndex.upsert([{
-                    id: doc._id.toString(),
-                    values: embedding.values
-                }])
+                console.log(`Paper added: ${doc._id} - ${doc.title}`);
 
                 res.json({ message: "Paper added successfully", id: doc._id });
             }).catch((err) => {
@@ -54,16 +60,6 @@ export default class PostPaper implements ApiRoute {
             });
 
         });
-    }
-
-    createEmbeddingText(paper: Paper): string {
-        return `Title: ${paper.title} 
-        Abstract: 
-        ${paper.abstract}
-
-        Subjects: ${paper.subjects.join(', ')}
-        
-        Authors: ${paper.authors.join(', ')}`;
     }
 
 }

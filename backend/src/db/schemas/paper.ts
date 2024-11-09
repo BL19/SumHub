@@ -13,18 +13,19 @@ const PaperSchema = new mongoose.Schema({
     type: { type: String, required: true },
     url: { type: String, required: true },
   }], required: true },
-}, {
-    methods: {
-        toJSON() {
-            let obj = this.toObject();
-            let newObj = removeUnderscoreFieldsDeep({
-                id: obj._id.toString(),
-                ...obj,
-            });
-            return newObj;
-        }
-    }
 });
+
+PaperSchema.add({
+  embeddingCount: { type: Number, required: false },
+})
 
 export type Paper = mongoose.InferSchemaType<typeof PaperSchema>;
 export const Paper = mongoose.model<Paper>('Paper', PaperSchema);
+export function paperToJson(paper: mongoose.Document<unknown, {}, Paper>): any {
+  let obj = paper.toObject();
+  let newObj = removeUnderscoreFieldsDeep({
+      id: obj._id.toString(),
+      ...obj,
+  });
+  return newObj;
+}
