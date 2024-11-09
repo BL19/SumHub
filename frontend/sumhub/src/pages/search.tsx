@@ -9,7 +9,6 @@ import "@/app/globals.css";
 import styles from "@/app/ui/search.module.css";
 import { useEffect, useState } from "react";
 
-
 export async function getServerSideProps(context: any) {
   const { q } = context.query;
   return {
@@ -65,6 +64,10 @@ export default function Results({ term }: { term: string }) {
           </div>
         </div>
       </form>
+
+      {/* Just a spacer */}
+      <div className="mt-16"></div>
+
       {loading ? (
         <LoadingContent />
       ) : error ? (
@@ -95,7 +98,7 @@ async function fetchResults(term: string): Promise<SearchResult[]> {
 
 function LoadingContent() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center min-h-screen">
       <h1 className="text-4xl font-bold">Loading</h1>
       <div
         className={`grid grid-cols-1 gap-4 mt-4 ${styles.searchResultContainer}`}
@@ -109,26 +112,26 @@ function LoadingContent() {
 }
 
 function SkeletonResult() {
-    return (
-        <div className={`bg-white shadow-md rounded-md p-4 hover:shadow-lg ${styles.minWidthBox} ${styles.minHeightBox}`}>
-            <div className="animate-pulse flex space-x-4">
-                <div className="flex-1 space-y-4 py-1 min-w-md">
-                    <div className="h-4 bg-gray-200 rounded w-3/4 min-h-8 "></div>
-                    <div className="space-y-2">
-                    <div className="h-4 bg-gray-200 rounded min-h-16 ">
-                        </div>
-                        <div className="h-4 bg-gray-200 rounded w-5/6 min-h-10 ">
-                        </div> 
-                    </div>
-                </div>
-            </div>
+  return (
+    <div
+      className={`bg-white shadow-md rounded-md p-4 hover:shadow-lg ${styles.minWidthBox} ${styles.minHeightBox}`}
+    >
+      <div className="animate-pulse flex space-x-4">
+        <div className="flex-1 space-y-4 py-1 min-w-md">
+          <div className="h-4 bg-gray-200 rounded w-3/4 min-h-8 "></div>
+          <div className="space-y-2">
+            <div className="h-4 bg-gray-200 rounded min-h-16 "></div>
+            <div className="h-4 bg-gray-200 rounded w-5/6 min-h-10 "></div>
+          </div>
         </div>
-    )
+      </div>
+    </div>
+  );
 }
 
 function ErrorContent({ error }: { error: string }) {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center min-h-screen">
       <h1 className="text-4xl font-bold">Error</h1>
       <p className="text-lg text-gray-600 mt-4">{error}</p>
     </div>
@@ -137,7 +140,7 @@ function ErrorContent({ error }: { error: string }) {
 
 function NotFoundContent() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center min-h-screen">
       <h1 className="text-4xl font-bold">Not Found</h1>
       <p className="text-lg text-gray-600 mt-4">No results found</p>
     </div>
@@ -146,7 +149,7 @@ function NotFoundContent() {
 
 function ResultsContent({ results }: { results: SearchResult[] }) {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center min-h-screen">
       <h1 className="text-4xl font-bold">Results</h1>
       <div
         className={`grid grid-cols-1 gap-4 mt-4 ${styles.searchResultContainer}`}
@@ -161,37 +164,42 @@ function ResultsContent({ results }: { results: SearchResult[] }) {
 
 function Result({ result }: { result: SearchResult }) {
   const primarySuject = result.data.subjects[0];
+  const subjects = result.data.subjects.slice(1);
   const [expanded, setExpanded] = useState(false);
   return (
-    <div key={result.data.id} className="bg-white shadow-md rounded-md p-4 hover:shadow-lg">
+    <div
+      key={result.data.id}
+      className="bg-white shadow-md rounded-md p-4 hover:shadow-lg"
+    >
       <h2 className="text-xl font-bold">{result.data.title}</h2>
       <div className="mt-2">
-        <div> {result.data.authors.map((author) => (
-          <span key={author} className="text-sm text-gray-600 mr-2">
-            {author}
-          </span>
-        ))}</div>
-   
-       
+        <div>
+          {" "}
+          {result.data.authors.map((author) => (
+            <span key={author} className="text-sm text-gray-600 mr-2">
+              {author}
+            </span>
+          ))}
+        </div>
       </div>
       <div className="mt-2 flex justify-between">
-        <div> <span key="pubDate" className="text-sm text-gray-600 mr-2">
-          {new Date(result.data.publishDate).toLocaleDateString()}
-        </span>
-        <span key="primarySubject" className="text-sm text-gray-600 mr-2">
-          {primarySuject}
-        </span></div>
-       <div className="pb-2 pr-2  max-w-6">{!expanded && (
-        <div className="flex flex-col mt-6">
-          <Button variant="ghost" onClick={() => setExpanded(!expanded)}>
-          <div className={`${styles['expand-icon']} max-w-2 `}>
-          </div>
-          </Button>
+        <div>
+          {" "}
+          <span key="pubDate" className="text-sm text-gray-600 mr-2">
+            {new Date(result.data.publishDate).toLocaleDateString()}
+          </span>
+          <span key="primarySubject" className="text-sm text-gray-600 mr-2">
+            {primarySuject}
+          </span>
         </div>
-      )}</div>
+        <div className="pb-2 pr-2  max-w-6">
+            <div className="flex flex-col mt-6 -ml-2 cursor-pointer">
+              <Button variant="ghost" onClick={() => setExpanded(!expanded)}>
+                <div className={`${styles["expand-icon"]} max-w-2 ${expanded ? styles['expanded'] : ''}`}></div>
+              </Button>
+            </div>
+        </div>
       </div>
-
-   
 
       {expanded && (
         <>
