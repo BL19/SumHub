@@ -33,4 +33,18 @@ export class GeminiAPI {
         return response.embedding;
     }
 
+    async generateEmbeddings(texts: string[]): Promise<ContentEmbedding[]> {
+        let response = await this.model.batchEmbedContents({
+            requests: texts.map(text => {
+                return {
+                    content: {
+                        role: 'text',
+                        parts: [{text: text}]
+                    }
+                }
+            })
+        })
+        return response.embeddings;
+    }
+
 }
