@@ -42,7 +42,14 @@ export default class PostPaper implements ApiRoute {
             
             // Body is valid, save the paper
             await paper.save().then(async (doc) => {
-                await this.embedder.saveEmbeddingsForPaper(doc);
+                try {
+                    await this.embedder.saveEmbeddingsForPaper(doc);
+                } catch (err) {
+                    console.error(err);
+                    res.status(500).json({ error: "Internal server error" });
+                    doc.deleteOne();
+                    return;
+                }
 
                 console.log(`Paper added: ${doc._id} - ${doc.title}`);
 
