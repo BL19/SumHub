@@ -7,55 +7,36 @@ import { SearchResult } from "../models/SearchResult";
 import fetchJson from "../lib/fetchJson";
 import "@/app/globals.css";
 import styles from "@/app/ui/search.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export async function getServerSideProps(context: any) {
   const { q } = context.query;
-  try {
-    console.log(q);
-    const results = await fetchJson<SearchResult[]>(
-      constants.api_url + "v1/paper/search",
-      {
-        body: JSON.stringify({
-          term: q,
-        }),
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    return {
-      props: {
-        results,
-        term: q,
-      },
-    };
-  } catch (e: any) {
-    return {
-      props: {
-        notFound: true,
-        results: null,
-        error: e.message,
-        term: q,
-      },
-    };
-  }
+  return {
+    props: {
+      term: q,
+    },
+  };
 }
 
-export default function Results({
-  results,
-  error,
-  notFound,
-  term,
-}: {
-  results: SearchResult[];
-  error: string;
-  notFound: boolean;
-  term: string;
-}) {
+export default function Results({ term }: { term: string }) {
   const router = useRouter();
+  const [results, setResults] = useState<SearchResult[]>([]);
+  const [error, setError] = useState<string>("");
+  const [notFound, setNotFound] = useState(false);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    setLoading(true);
+    fetchResults(term)
+      .then((results) => {
+        setResults(results);
+        setNotFound(results.length === 0);
+        // setLoading(false);
+      })
+      .catch((error) => {
+        setError(error);
+        setLoading(false);
+      });
+  }, [term]);
 
   return (
     <DefaultLayout>
@@ -81,7 +62,9 @@ export default function Results({
           </div>
         </div>
       </form>
-      {error ? (
+      {loading ? (
+        <LoadingContent />
+      ) : error ? (
         <ErrorContent error={error} />
       ) : notFound ? (
         <NotFoundContent />
@@ -90,6 +73,52 @@ export default function Results({
       )}
     </DefaultLayout>
   );
+}
+
+async function fetchResults(term: string): Promise<SearchResult[]> {
+  return await fetchJson<SearchResult[]>(
+    constants.api_url + "v1/paper/search",
+    {
+      body: JSON.stringify({
+        term,
+      }),
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+}
+
+function LoadingContent() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-screen">
+      <h1 className="text-4xl font-bold">Loading</h1>
+      <div
+        className={`grid grid-cols-1 gap-4 mt-4 ${styles.searchResultContainer}`}
+      >
+        <SkeletonResult />
+        <SkeletonResult />
+        <SkeletonResult />
+      </div>
+    </div>
+  );
+}
+
+function SkeletonResult() {
+    return (
+        <div className="bg-white shadow-md rounded-md p-4 hover:shadow-lg">
+            <div className="animate-pulse flex space-x-4">
+                <div className="flex-1 space-y-4 py-1">
+                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                    <div className="space-y-2">
+                        <div className="h-4 bg-gray-200 rounded"></div>
+                        <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
 }
 
 function ErrorContent({ error }: { error: string }) {

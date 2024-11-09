@@ -9,16 +9,6 @@ import { Input } from "@/components/ui/input";
 export default function Home() {
   const router = useRouter();
 
-  // const handleLogin = () => {
-  //   // Navigate to the login page
-  //   router.push("/login"); // Replace '/login' with your desired path
-  // };
-
-  // const handleSignUp = () => {
-  //   // Navigate to the sign-up page
-  //   router.push("/signup"); // Replace '/signup' with your desired path
-  // };
-
   return (
     <DefaultLayout>
       <div className="flex-grow flex flex-col items-center justify-center px-4">
