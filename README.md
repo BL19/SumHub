@@ -8,7 +8,7 @@ Often, students waste valuable time sifting through irrelevant resources. SumHub
 
 ## How SumHub works
 
-SumHub uses a [MongoDB](https://www.mongodb.com/products/platform/atlas-database) database for storing all papers and other data. All papers are indexed in the vector database [Pinecone](https://www.pinecone.io/product/), Pinecone was selected over MongoDB due to the generous free tier on pinecone in contrast to the 500MiB we get from MongoDB Atlas.
+SumHub uses a [MongoDB](https://www.mongodb.com/products/platform/atlas-database) database for storing all papers and other data. All papers are indexed in the vector database [Pinecone](https://www.pinecone.io/product/), Pinecone was selected over MongoDB since we were afraid that all vectors would not fit in the 512MB of the MongoDB Atlas M0 Free Tier. Since pinecone provides 2GB of free vector storage in their free tier, we decided to go with that to split out the data usage.
 
 To convert the papers into a form that we can feed into pinecone, Google Gemini Embeddings are used to create a 768-dimensional vector.
 
