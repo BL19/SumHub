@@ -38,7 +38,7 @@ jobs:
           tags: bl19dev/sumhub-backend:main
           push: true
           platforms: linux/amd64
-      - name: Build and push backend image
+      - name: Build and push frontend image
         uses: docker/build-push-action@v3.2.0
         with:
           context: frontend/sumhub
