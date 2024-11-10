@@ -51,7 +51,12 @@ export default function Results({ term }: { term: string }) {
           e.preventDefault();
           const formData = new FormData(e.currentTarget);
           const newTerm = formData.get("term");
-          if (newTerm && typeof newTerm === "string" && newTerm.length > 0 && term !== newTerm) {
+          if (
+            newTerm &&
+            typeof newTerm === "string" &&
+            newTerm.length > 0 &&
+            term !== newTerm
+          ) {
             router.push(`/search?q=${newTerm}`);
           }
         }}
@@ -183,17 +188,19 @@ function Result({ result }: { result: SearchResult }) {
       <h2 className="text-xl font-bold" aria-label="Title" title="Title">
         {result.data.title}
       </h2>
-      <div className="mt-2" aria-label="Authors" title="Authors">
+      <div className="mt-2 text-sm text-gray-600" aria-label="Authors" title="Authors">
         <div>
           {" "}
-          {result.data.authors.map((author) => (
-            <span
-              key={author}
-              className="text-sm text-gray-600 mr-2"
-              aria-label="Author"
-            >
-              {author}
-            </span>
+          {result.data.authors.map((author, i) => (
+            <>
+              {i != 0 ? ", " : ""}
+              <span
+                key={author}
+                aria-label="Author"
+              >
+                {author}
+              </span>
+            </>
           ))}
         </div>
       </div>
@@ -246,18 +253,20 @@ function Result({ result }: { result: SearchResult }) {
           </p>
 
           <div
-            className="flex flex-wrap mt-4"
+            className="mt-4 text-sm text-gray-600"
             aria-label="All Subjects"
             title="All Subjects"
           >
-            {result.data.subjects.map((subject) => (
-              <span
-                key={subject}
-                className="text-sm text-gray-500 mr-2"
-                aria-label="Subject"
-              >
-                {subject}
-              </span>
+            {result.data.subjects.map((subject, i) => (
+              <>
+                {i != 0 ? ", " : ""}
+                <span
+                  key={subject}
+                  aria-label="Subject"
+                >
+                  {subject}
+                </span>
+              </>
             ))}
           </div>
           <div className="flex flex-col mt-4">

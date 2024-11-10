@@ -1,5 +1,6 @@
 import { LogoHolder } from "../components/ui/LandingPage";
 import Link from "next/link";
+import { inter } from '@/app/ui/fonts';
 
 export default function DefaultLayout({
   children,
@@ -8,7 +9,7 @@ export default function DefaultLayout({
 }) {
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className={`min-h-screen flex flex-col ${inter.className}`}>
       <div className=" p-8 flex justify-between items-center">
         <Link href="/" className="cursor-pointer" aria-label="Start page">
           <LogoHolder />
