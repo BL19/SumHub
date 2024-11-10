@@ -3,7 +3,7 @@
 }
 
 .minWidthBox{
-    min-width: 804px;
+    min-width: min(804px, 100vw);
 }
 
 .minHeightBox{
